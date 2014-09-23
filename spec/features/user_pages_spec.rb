@@ -4,6 +4,28 @@ describe "User Pages" do
 	subject {page}
 
 	describe "show users" do
+		describe "individually" do
+			let (:user) { FactoryGirl.create(:user) }
+			
+			before { visit user_path(user) }
+				
+				it { should have_content(user.name) }
+				it { should have_content(user.email) }
+				it { should_not have_content(user.password) }
+
+		end
+		
+		describe "non-existant", type: :request do
+			before { get user_path(-1) }
+			
+			specify { expect(response).to redirect_to(users_path) }
+			describe "follow redirect" do
+				before { visit user_path(-1) }
+				
+				it { should have_alert(:danger, text: "Unable") }
+			end
+		end
+
 		describe "all" do
 			before do
 				25.times { |i| FactoryGirl.create(:user) }
