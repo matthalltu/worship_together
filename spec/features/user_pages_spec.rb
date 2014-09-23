@@ -6,12 +6,7 @@ describe "User Pages" do
 	describe "show users" do
 		describe "all" do
 			before do
-				25.times do |i|
-					User.create(name: "Person #{i}",
-						email: "person.#{i}@example.com",
-						password: 'password')
-				end
-				# { |i| FactoryGirl.create(:user) }
+				25.times { |i| FactoryGirl.create(:user) }
 				visit users_path
 			end
 
@@ -26,7 +21,6 @@ describe "User Pages" do
 			end
 		end
 	end
-#=begin	
 	describe "creating user" do
 		before { visit new_user_path }
 
@@ -50,7 +44,7 @@ describe "User Pages" do
 			before do
 				fill_in "Username", with: "John Doe"
 				fill_in "Email", with: "john.doe@example.com"
-				fill_in "Passowrd", with: "password"
+				fill_in "Password", with: "password"
 			end
 
 			it "allows the user to fill in the fields" do
@@ -62,12 +56,11 @@ describe "User Pages" do
 			end
 
 
-			it "produces a welcome message" do
+			describe "produces a welcome message" do
 				before { click_button 'Submit' }
 
-				it {should have_alert(:success, text: "Wecome") }
+				it {should have_alert(:success, text: "Welcome") }
 			end
 		end
 	end
-#=end
 end

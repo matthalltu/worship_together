@@ -1,14 +1,12 @@
 require 'spec_helper'
 
 describe User do
-    let(:user) { User.create[name: 'John Doe', email: "jdoe@example.come", password: 'password'] }
-	#{ FactoryGirl.create{:user} }
+    let(:user) { FactoryGirl.create(:user) }
     subject { user }
-
+    
     it { should respond_to(:name) }
     it { should respond_to(:email) }
     it { should respond_to(:password) }
-
     it { should be_valid }
 
     describe "empty name" do
@@ -77,3 +75,4 @@ describe User do
 	end
     end
 end
+
