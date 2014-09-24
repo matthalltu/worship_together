@@ -197,7 +197,7 @@ describe "User Pages" do
       end
 
       it "removes a user from the system" do
-        expect click_link('delete', match: :first).to change(User, :count).by(-1)
+        expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
       end
     end
 end
