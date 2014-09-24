@@ -24,4 +24,20 @@ class UsersController < ApplicationController
 	flash[:danger] = "Unable to find user"
 	redirect_to users_path
     end
+
+    def edit
+	@user = User.find(params[:id])
+    end
+  
+  def update 
+    @user = User.find(params[:id])
+    if @user.update_attributes(params.require(:user).permit(:name, :email, :password))
+	    flash[:success] = "Welcome to the site, #{@user.name}"
+	    redirect_to @user
+	else
+	    flash.now[:danger] = "Unable to create new user"
+    	    render 'edit'
+	end
+    end
+  
 end

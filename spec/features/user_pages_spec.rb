@@ -43,7 +43,6 @@ describe "User Pages" do
 	    end
 	end
     end
-
     describe "creating user" do
 	before { visit new_user_path }
 
@@ -96,7 +95,6 @@ describe "User Pages" do
 	    end
 	end
     end
-
     describe "editing users" do
 	let (:user) { FactoryGirl.create(:user) }
 	let!(:original_name) { user.name }
@@ -164,4 +162,5 @@ describe "User Pages" do
 		expect { click_button 'Submit' }.not_to change(User, :count)
 	    end
      end
+end
 end
