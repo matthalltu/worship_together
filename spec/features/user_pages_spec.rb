@@ -44,7 +44,8 @@ describe "User Pages" do
 	end
     end
     describe "creating user" do
-      let (:submit) { 'Create new user'}
+	let (:submit) { 'Create new user' }
+
 	before { visit new_user_path }
 
 	it "hides password text" do
@@ -67,8 +68,8 @@ describe "User Pages" do
 		fill_in 'Username', with: 'John Doe'
 		fill_in 'Email', with: 'john.doe@example.com'
 		fill_in 'Password', with: 'password'
-		fill_in 'Confirmation', with: 'password'    
-	end
+		fill_in 'Confirmation', with: 'password'
+	    end
 
 	    it "allows the user to fill in the fields" do
 		click_button submit
@@ -102,9 +103,12 @@ describe "User Pages" do
     describe "editing users" do
 	let (:user) { FactoryGirl.create(:user) }
 	let!(:original_name) { user.name }
-  	let (:submit) { 'Update user profile' }
-      
-	before { visit edit_user_path(user) }
+	let (:submit) { 'Update user profile' }
+
+	before do
+	    login user
+	    visit edit_user_path(user)
+	end
 
 	it { should have_field('Username', with: user.name) }
 	it { should have_field('Email', with: user.email) }
@@ -134,15 +138,15 @@ describe "User Pages" do
 	    end
 	end
 
-  describe "non-existant", type: :request do
-      before { get edit_user_path(-1) }
+	describe "non-existant", type: :request do
+	    before { get edit_user_path(-1) }
 
 	    specify { expect(response).to redirect_to(users_path) }
 
 	    describe "follow redirect" do
-		      before { visit user_path(-1) }
+		before { visit edit_user_path(-1) }
 
-		      it { should have_alert(:danger, text: "Unable") }
+		it { should have_alert(:danger, text: "Unable") }
 	    end
 	end
 
@@ -151,7 +155,7 @@ describe "User Pages" do
 		fill_in 'Username', with: 'New Name'
 		fill_in 'Email', with: 'new.name@example.com'
 		fill_in 'Password', with: user.password
-		fill_in 'Confirmation', with: user.password	    
+		fill_in 'Confirmation', with: user.password
 	    end
 
 	    describe "changes the data" do
@@ -163,6 +167,7 @@ describe "User Pages" do
 
 	    describe "redirects back to profile page", type: :request do
 		before do
+		    login user, avoid_capybara: true
 		    patch user_path(user), user: { name: 'New Name',
 						   email: 'new.name@example.com',
 						   password: user.password,
@@ -180,28 +185,31 @@ describe "User Pages" do
 	    it "does not add a new user to the system" do
 		expect { click_button submit }.not_to change(User, :count)
 	    end
-     end
-  end
-  
+	end
+    end
+
     describe "delete users" do
-      let!(:user) { FactoryGirl.create(:user) }
-      
-      before { visit users_path }
+	let!(:user) { FactoryGirl.create(:user) }
 
-      it { should have_link('delete', href: user_path(user)) }
-  
-      describe "redirects properly", type: :request do
-          before { delete user_path(user) }
-          specify { expect(response).to redirect_to(users_path) }
-      end
-      
-      it "produces a delete message" do
-          click_link('delete', match: :first)
-          should have_alert(:success)
-      end
+	before { visit users_path }
 
-      it "removes a user from the system" do
-        expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
-      end
+	it { should have_link('delete', href: user_path(user)) }
+
+	describe "redirects properly", type: :request do
+	    before { delete user_path(user) }
+
+	    specify { expect(response).to redirect_to(users_path) }
+	end
+
+	it "produces a delete message" do
+	    click_link('delete', match: :first)
+	    should have_alert(:success)
+	end
+
+	it "removes a user from the system" do
+	    expect do
+		click_link('delete', match: :first)
+	    end.to change(User, :count).by(-1)
+	end
     end
 end
