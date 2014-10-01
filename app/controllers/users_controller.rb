@@ -28,6 +28,25 @@ class UsersController < ApplicationController
     end
 
     def edit
+        @user = User.find(params[:id])
+    end
+  
+    def update
+        @user = User.find(params[:id])
+        if @user.update(user_params)
+            flash[:success] = "Your profile has been modified"
+            redirect_to @user
+        else
+            flash[:danger] = "Unable to create new user"
+            render 'edit'
+        end
+    end
+  
+    def destroy
+        @user = User.find(params[:id])
+        @user.destroy
+        flash[:success] = "#{@user.name} removed from the site"
+        redirect_to users_path
     end
 
     private
@@ -46,4 +65,5 @@ class UsersController < ApplicationController
 	flash[:danger] = "Unable to find user"
 	redirect_to users_path
     end
+
 end
