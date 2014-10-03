@@ -2,6 +2,7 @@ class UsersController < ApplicationController
     before_action :ensure_user_logged_in, only: [:edit, :update, :destroy]
     before_action :ensure_correct_user, only: [:edit]
     before_action :ensure_admin, only: [:destroy]
+    before_action :ensure_user_not_logged_in, only: [:new]
 
     def index
 	@users = User.all
@@ -46,9 +47,14 @@ class UsersController < ApplicationController
   
     def destroy
         @user = User.find(params[:id])
+        if @user.admin?
+		flash[:danger] = "Cannot delete admin"
+		redirect_to root_path
+	else	
         @user.destroy
         flash[:success] = "#{@user.name} removed from the site"
         redirect_to users_path
+    	end
     end
 
     private
@@ -80,5 +86,12 @@ class UsersController < ApplicationController
 	    flash[:danger] = 'Only admins allowed to delete users'
 	    redirect_to root_path
 	end
+    end
+
+    def ensure_user_not_logged_in
+    	unless !(logged_in?)
+	    flash[:warning] = "Cannot create a new user while logged in"
+	    redirect_to root_path    			
+    	end
     end
 end
