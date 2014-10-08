@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>WorshipTogether</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
@@ -8,12 +8,15 @@
 </head>
 <body>
 
-<nav>
+<nav class="navbar navbar-default" role="navigation">
     <ul>
+	    <li><%= link_to 'Worship Together', root_path, method: :index %></li>
+	    <li><%= link_to 'Users', users_path, method: :index %></li>
 	<% if logged_in? %>
 	    <li><%= link_to 'Log Out', logout_path, method: :delete %></li>
 	<% else %>
 	    <li><%= link_to 'Log In', login_path %></li>
+	    <li><%= link_to 'Sign Up', new_user_path, method: :new %></li>
 	<% end %>
     </ul>
 </nav>
@@ -22,7 +25,7 @@
     <p class="ALERT-<%= type %>"><%= message %></p>
 <% end %>
 
-<%= yield %>
+<div class= "main container" ><%= yield %></div>
 
 </body>
 </html>

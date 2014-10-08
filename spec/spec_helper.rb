@@ -39,6 +39,7 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  
 config.backtrace_exclusion_patterns = [
        /\/lib\d*\/ruby\//,
        /bin\//,
