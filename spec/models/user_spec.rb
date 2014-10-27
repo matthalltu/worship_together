@@ -10,7 +10,7 @@ describe User do
     it { should respond_to(:password_digest) }
     it { should respond_to(:authenticate) }
     
-    it { should respond_to(choii 
+    it { should respond_to(:church) } 
 
     it { should be_valid }
     it { should_not be_admin }
